@@ -22,6 +22,5 @@ X = sc.fit_transform(X)
 Y_real = cv2.imread('Classification.png')[:dimension, :dimension]
 Y_real = Y_real.reshape((dimension*dimension, 3))
 Y_real = (Y_real/255).astype(int)
-print('aaa')
-df = pd.DataFrame(np.concatenate((X, Y_real), axis=1), columns=bands_names + ['water', 'forest', 'fields'])
+df = pd.DataFrame(np.concatenate((X, Y_real, (1 - Y_real.any(axis=1).astype(int)).reshape(-1,1)), axis=1), columns=bands_names + ['water', 'forest', 'fields', 'Other'])
 df.to_csv('data.csv')

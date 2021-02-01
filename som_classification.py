@@ -29,7 +29,7 @@ start_time = time.time()
 df = pd.read_csv('data.csv')
 df = undersampling(df)
 X = df.iloc[:,1:14].to_numpy()
-Y_target = df.iloc[:,-3:].to_numpy()
+Y_target = df.iloc[:,-4:].to_numpy()
 
 # Training Minisom
 som = MiniSom(x=6, y=6, input_len=13, sigma=1.0, learning_rate=0.5)
