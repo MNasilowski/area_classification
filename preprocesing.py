@@ -2,25 +2,31 @@ import cv2
 import os
 import numpy as np
 import pandas as pd
-from sklearn.preprocessing import MinMaxScaler
 
 files = os.listdir('Data')
-dimension = 1830 # to powinno się dać jakoś automatycznie wczytać.
-data = np.zeros((dimension, dimension, len(files)))
-bands_names = []
-
+columns_names = []
+x_size, y_size = 1830,1830
+X = np.zeros((x_size,y_size,len(files)))
 for i, file in enumerate(files):
-    bands_names.append(file[-7:-4])
-    data[:, :, i] = cv2.imread(os.path.join('Data', file), cv2.IMREAD_UNCHANGED)[:dimension, :dimension]
-X = data.reshape(dimension*dimension, len(files))
+    columns_names.append(file[-7:-4])
+    X[...,i] = cv2.imread(os.path.join('Data', file), cv2.IMREAD_UNCHANGED)
+data = X.reshape((x_size*y_size, len(files)))
 
-for i in range(X.shape[1]):
-    X[:, i] = np.where(X[:, i] < np.mean(X[:, i]) + 3*np.std(X[:, i]), X[:, i], np.mean(X[:, i]) + 3*np.std(X[:, i]))
+for i in range(data.shape[1]):
+    max_value = np.mean(data[:, i]) + 3*np.std(data[:, i])
+    data[:, i] = (np.where(data[:, i] < max_value, data[:, i], max_value))
+
+from sklearn.preprocessing import MinMaxScaler
 sc = MinMaxScaler(feature_range=(0, 1))
-X = sc.fit_transform(X)
+data = sc.fit_transform(data)
 
-Y_real = cv2.imread('Classification.png')[:dimension, :dimension]
-Y_real = Y_real.reshape((dimension*dimension, 3))
-Y_real = (Y_real/255).astype(int)
-df = pd.DataFrame(np.concatenate((X, Y_real, (1 - Y_real.any(axis=1).astype(int)).reshape(-1,1)), axis=1), columns=bands_names + ['water', 'forest', 'fields', 'Other'])
-df.to_csv('data.csv')
+classes = cv2.imread('Classification.png')[:x_size, :y_size]
+classes = classes.reshape((x_size*y_size, 3))
+classes = (classes/255).astype(int)
+
+other = (1 - classes.any(axis=1).astype(int)).reshape(-1,1)
+columns_names += ['water', 'forest', 'fields', 'other']
+
+data = np.concatenate((data, classes, other), axis=1)
+data = pd.DataFrame(data, columns=columns_names)
+data.to_csv('data.csv')
