@@ -17,10 +17,10 @@ from sklearn.ensemble import RandomForestClassifier
 
 def undersampling(df):
 # TODO Make it reusable
-    forests = df[df["forest"]==1]
-    water = df[df["water"]==1]
-    fields = df[df["fields"]==1]
-    other = df[(df["fields"]!=1) & (df["forest"]!=1) & (df["water"]!=1)]
+    forests = df[df["forest"] == 1]
+    water = df[df["water"] == 1]
+    fields = df[df["fields"] == 1]
+    other = df[(df["fields"] != 1) & (df["forest"] !=1 ) & (df["water"] != 1)]
     min_len = min(forests.shape[0], water.shape[0], fields.shape[0], other.shape[0])
     forests = forests.sample(min_len)
     water = water.sample(min_len)
