@@ -2,3 +2,4 @@ Data
 Classification.png
 data_set.csv
 .ipynb_checkpoints
+__pycache__
