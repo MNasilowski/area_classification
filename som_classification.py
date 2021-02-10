@@ -23,10 +23,8 @@ def metrics_matrix(Y_target, Y_pred, metric=IoU):
     return matrix
     
 
-start_time = time.time()
-#reading data from csv and spliting into input and output
-#data was preprocessed before inserted into data.csv
-df = pd.read_csv('data.csv')
+start_time = time.time() 
+df = pd.read_csv('data_set.csv')
 df = undersampling(df)
 X = df.iloc[:,1:14].to_numpy()
 Y_target = df.iloc[:,-4:].to_numpy()
