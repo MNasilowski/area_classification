@@ -5,6 +5,7 @@ import time
 from sklearn.preprocessing import OneHotEncoder
 from minisom import MiniSom
 from helpers import undersampling
+from configparser import ConfigParser
 
 def IoU(target, predicted):
     """return intersection over union"""
@@ -24,38 +25,37 @@ def metrics_matrix(Y_target, Y_pred, metric=IoU):
     
 
 
-
-config = ConfigParser()
-config.read('config.ini')
-input_dir = config['main']['input_dir']
-class_file = config['main']['classification_data']
-x_size = int(config['main']['x_size'])
-y_size = int(config['main']['y_size'])
-class_names = list(config['classes'].values())
-start_time = time.time() 
-df = pd.read_csv('data.csv', nrows=100000)
-df = undersampling(df, )
-X = df.iloc[:,1:14].to_numpy()
-Y_target = df.iloc[:,-4:].to_numpy()
-
-# Training Minisom
-som = MiniSom(x=6, y=6, input_len=13, sigma=1.0, learning_rate=0.5)
-som.random_weights_init(X)
-som.train_random(data=X, num_iteration=200000, verbose=True)
-
-# Making prediction and encoding classes
-enc = OneHotEncoder()
-Y_pred = [som.winner(x) for x in X]
-Y_pred = np.array([y[0]*100 + y[1] for y in Y_pred ])
-Y_pred = enc.fit_transform(Y_pred.reshape(-1, 1)).toarray()
-
-# Evaluation
-metrix_IoU = metrics_matrix(Y_target, Y_pred, IoU)
-
-# Saving results
-pd.DataFrame(Y_pred).to_csv('Y_pred_from_som.csv')
-pickle.dump(som, open( "save.p", "wb" ) )
-print(f'Done in {time.time() - start_time}')
+if '__name__' == '__main__':
+    config = ConfigParser()
+    config.read('config.ini')
+    x_size = int(config['main']['x_size'])
+    y_size = int(config['main']['y_size'])
+    class_names = list(config['classes'].values())
+    
+    start_time = time.time() 
+    df = pd.read_csv('data.csv', nrows=100000)
+    df = undersampling(df, class_names)
+    X = df.iloc[:,1:14].to_numpy()
+    Y_target = df.iloc[:,-4:].to_numpy()
+    
+    # Training Minisom
+    som = MiniSom(x=6, y=6, input_len=13, sigma=1.0, learning_rate=0.5)
+    som.random_weights_init(X)
+    som.train_random(data=X, num_iteration=200000, verbose=True)
+    
+    # Making prediction and encoding classes
+    enc = OneHotEncoder()
+    Y_pred = [som.winner(x) for x in X]
+    Y_pred = np.array([y[0]*100 + y[1] for y in Y_pred ])
+    Y_pred = enc.fit_transform(Y_pred.reshape(-1, 1)).toarray()
+    
+    # Evaluation
+    metrix_IoU = metrics_matrix(Y_target, Y_pred, IoU)
+    
+    # Saving results
+    pd.DataFrame(Y_pred).to_csv('Y_pred_from_som.csv')
+    pickle.dump(som, open( "save.p", "wb" ) )
+    print(f'Done in {time.time() - start_time}')
 
 
 
