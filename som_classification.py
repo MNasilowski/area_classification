@@ -4,7 +4,7 @@ import pickle
 import time
 from sklearn.preprocessing import OneHotEncoder
 from minisom import MiniSom
-from supervised_classification import undersampling
+from helpers import undersampling
 
 def IoU(target, predicted):
     """return intersection over union"""
@@ -23,9 +23,18 @@ def metrics_matrix(Y_target, Y_pred, metric=IoU):
     return matrix
     
 
+
+
+config = ConfigParser()
+config.read('config.ini')
+input_dir = config['main']['input_dir']
+class_file = config['main']['classification_data']
+x_size = int(config['main']['x_size'])
+y_size = int(config['main']['y_size'])
+class_names = list(config['classes'].values())
 start_time = time.time() 
-df = pd.read_csv('data_set.csv')
-df = undersampling(df)
+df = pd.read_csv('data.csv', nrows=100000)
+df = undersampling(df, )
 X = df.iloc[:,1:14].to_numpy()
 Y_target = df.iloc[:,-4:].to_numpy()
 
