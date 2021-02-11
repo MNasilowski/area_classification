@@ -19,12 +19,12 @@ def get_size(input_dir):
 from configparser import ConfigParser
 config = ConfigParser()
 config.add_section('main')
-config.set('main', 'input_dir', 'Data/R20m_png')
+config.set('main', 'input_dir', 'Data/R60m_png')
 config.set('main', 'classification_data', 'Data/Classification.png')
 x_size, y_size = get_size(config['main']['input_dir'])
 config.set('main', 'x_size', str(x_size))
 config.set('main', 'y_size', str(y_size))
-
+config.set('main', 'csv_data_file', 'data_set.csv')
 config.add_section('classes')
 config.set('classes', 'class_1', 'water')
 config.set('classes', 'class_2', 'forest')

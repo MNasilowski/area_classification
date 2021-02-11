@@ -41,20 +41,14 @@ if __name__ == '__main__':
     x_size = int(config['main']['x_size'])
     y_size = int(config['main']['y_size'])
     class_names = list(config['classes'].values())
+    csv_data_file = config['main']['csv_data_file']
 
     data, columns_names = images_to_numpy(input_dir,(x_size,y_size))
-    print("Data loaded...")
     data = remove_outstandings(data)
-    print("Data processed...")
     classes = get_classes(class_file, (x_size,y_size))
-    print('classes loaded...')
     other = (1 - classes.any(axis=1).astype(int)).reshape(-1,1)
-    print('Other created...')
     columns_names += class_names 
-    print('Columns names done...')
     data = np.concatenate((data, classes, other), axis=1)
-    print('Data concatenation done...')
     data = pd.DataFrame(data, columns=columns_names)
-    print('Data converted to dataframe')
-    data.to_csv('data.csv')
+    data.to_csv(csv_data_file)
     

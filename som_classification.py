@@ -25,15 +25,16 @@ def metrics_matrix(Y_target, Y_pred, metric=IoU):
     
 
 
-if '__name__' == '__main__':
+if  __name__ == '__main__':
     config = ConfigParser()
     config.read('config.ini')
     x_size = int(config['main']['x_size'])
     y_size = int(config['main']['y_size'])
     class_names = list(config['classes'].values())
+    csv_data_file = config['main']['csv_data_file']
     
     start_time = time.time() 
-    df = pd.read_csv('data.csv', nrows=100000)
+    df = pd.read_csv(csv_data_file)
     df = undersampling(df, class_names)
     X = df.iloc[:,1:14].to_numpy()
     Y_target = df.iloc[:,-4:].to_numpy()
@@ -57,6 +58,10 @@ if '__name__' == '__main__':
     pickle.dump(som, open( "save.p", "wb" ) )
     print(f'Done in {time.time() - start_time}')
 
+
+
+a = [1,2,3,4,5,6,7]
+a[-4:]
 
 
 
