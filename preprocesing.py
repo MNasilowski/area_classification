@@ -25,12 +25,13 @@ def remove_outstandings(data):
     data = sc.fit_transform(data)
     return data
 
-def get_classes(class_file, size):
-    nr_of_class = 3
-    classes = cv2.imread(class_file)
-    classes = cv2.resize(classes, size, interpolation = cv2.INTER_AREA)
-    classes = classes.reshape((size[0]*size[1], nr_of_class))
-    classes = (classes/255).astype(int)
+def get_classes(class_dir, size):
+    files = os.listdir(class_dir)
+    X = np.zeros((size[0], size[1], len(files)))
+    for i, file in enumerate(files):
+        file_path = os.path.join(class_dir, file)
+        X[...,i] = np.rint(cv2.imread(file_path, cv2.IMREAD_GRAYSCALE)/255)
+    classes = X.reshape((size[0]*size[1], len(files)))
     return classes
 
 if __name__ == '__main__':
@@ -43,7 +44,7 @@ if __name__ == '__main__':
     class_names = list(config['classes'].values())
     csv_data_file = config['main']['csv_data_file']
 
-    data, columns_names = images_to_numpy(input_dir,(x_size,y_size))
+    data, columns_names = images_to_numpy(input_dir, (x_size,y_size))
     data = remove_outstandings(data)
     classes = get_classes(class_file, (x_size,y_size))
     other = (1 - classes.any(axis=1).astype(int)).reshape(-1,1)
@@ -51,4 +52,5 @@ if __name__ == '__main__':
     data = np.concatenate((data, classes, other), axis=1)
     data = pd.DataFrame(data, columns=columns_names)
     data.to_csv(csv_data_file)
+    
     

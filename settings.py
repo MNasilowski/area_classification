@@ -20,7 +20,7 @@ from configparser import ConfigParser
 config = ConfigParser()
 config.add_section('main')
 config.set('main', 'input_dir', 'Data/R60m_png')
-config.set('main', 'classification_data', 'Data/Classification.png')
+config.set('main', 'classification_data', 'Data/Classes')
 x_size, y_size = get_size(config['main']['input_dir'])
 config.set('main', 'x_size', str(x_size))
 config.set('main', 'y_size', str(y_size))
