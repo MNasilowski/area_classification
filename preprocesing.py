@@ -52,5 +52,3 @@ if __name__ == '__main__':
     data = np.concatenate((data, classes, other), axis=1)
     data = pd.DataFrame(data, columns=columns_names)
     data.to_csv(csv_data_file)
-    
-    
