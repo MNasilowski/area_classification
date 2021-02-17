@@ -8,6 +8,7 @@ from sklearn.preprocessing import MinMaxScaler
 
 def images_to_numpy(input_dir, dx, dy, x=0, y=0):
     files = os.listdir(input_dir)
+    print("diles: ", files)
     columns_names = []
     X = np.zeros((dx, dy, len(files)))
     for i, file in enumerate(files):
@@ -28,6 +29,7 @@ def remove_outstandings(data):
 def get_classes(class_dir, dx, dy, x=0, y=0):
     
     files = os.listdir(class_dir)
+    print("diles: ", files)
     X = np.zeros((dx, dy, len(files)))
     for i, file in enumerate(files):
         file_path = os.path.join(class_dir, file)
