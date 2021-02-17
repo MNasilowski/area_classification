@@ -25,6 +25,22 @@ def undersampling(df,classes_names,part=1):
         parts[clas] = parts[clas].sample(min_len)
     return pd.concat(parts.values())
 
+def IoU(target, predicted):
+    """return intersection over union"""
+    iou = np.sum(np.logical_and(target,predicted))
+    iou = iou / (np.sum(np.logical_or(target,predicted)) + 1e-10)
+    return iou
+
+def metrics_matrix(Y_target, Y_pred, metric=IoU):
+    """Compare target classes with predicted classes. 
+    Return matrix with metrics
+    """
+    matrix = np.zeros((Y_pred.shape[1],Y_target.shape[1]))
+    for i in range(matrix.shape[0]):
+        for j in range(matrix.shape[1]):    
+            matrix[i][j] = IoU(Y_target[:,j],Y_pred[:,i])
+    return matrix
+
 def show_target_pred_dif(yt,yp):
     """
     Show comparision beatween target and predicted image
