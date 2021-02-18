@@ -16,7 +16,6 @@ from sklearn.ensemble import RandomForestClassifier
 
 
 def undersampling(df):
-# TODO Make it reusable
     forests = df[df["forest"] == 1]
     water = df[df["water"] == 1]
     fields = df[df["fields"] == 1]
@@ -45,7 +44,6 @@ acc = accuracy_score(y_true=y_test[:,2], y_pred=y_pred[:,2])
 
             
 #Random Forest
-from sklearn.ensemble import RandomForestClassifier
 X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.3)
 clf = RandomForestClassifier()
 clf.fit(X_train, y_train)
