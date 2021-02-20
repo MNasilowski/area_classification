@@ -6,6 +6,7 @@ Created on Wed Feb  3 13:35:27 2021
 """
 import pandas as pd
 import numpy as np
+import math
 import matplotlib.pyplot as plt 
 
 def undersampling(df,classes_names,part=1):
@@ -59,16 +60,31 @@ def show_target_pred_dif(yt,yp):
     for ax, col in zip(axs[0], column):
         ax.set_title(col)
         
-def plot_MinMaxAvg(data,figsize=(12,4)):
+def plot_MinMaxAvg(data, column_names, figsize=(12,4)):
     """Plot mean values of data columns with min and max values"""
     average = data.mean(axis=0)
     st_deviation = data.std(axis=0)
     min_values = data.min(axis=0)
     max_values = data.max(axis=0)
-    fig, ax = plt.subplots(figsize=figsize)
-    ax.errorbar(np.arange(average.shape[0]), average, st_deviation, fmt='ok', lw=3)
-    ax.errorbar(np.arange(average.shape[0]), average, [min_values,max_values], fmt='.k', ecolor='grey', lw=1)
-    average.shape
+    plt.figure()
+    plt.errorbar(np.arange(average.shape[0]), average, st_deviation, fmt='ok', lw=10, ecolor='dodgerblue')
+    plt.errorbar(np.arange(average.shape[0]), average, [min_values,max_values], fmt='.k', ecolor='grey', lw=1)
+    plt.xticks(ticks=range(len(column_names)), labels=column_names)
+    plt.xlabel("Bounds names")
+    plt.ylabel("Value")
+    
+def plot_values_histogram(bounds, column_names, ncols=3, nrows=2):
+    nrows=math.ceil(len(column_names)*1.0/ncols)
+    print("dim",nrows,ncols)
+    fig, axs = plt.subplots(figsize=(3*ncols, 3*nrows),
+                            ncols=ncols, nrows=nrows)
+    fig.tight_layout(pad=3.0)
+    for i, ax in enumerate(fig.get_axes()):
+        if i >= len(column_names):
+            break
+        ax.hist(bounds[...,i].flatten(), bins=100)
+        ax.set_title(column_names[i])
+    plt.show()
     
 def show_classes_distribution(data, classes):
     values = [np.sum(i) for i in data.T]
