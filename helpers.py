@@ -50,7 +50,7 @@ def show_target_pred_dif(yt,yp):
     """
     column = ['Target','Predicted','Target - Predicted']
     nrows = yt.shape[-1]
-    fig, axs = plt.subplots(figsize=(12,nrows*4), ncols = 3, nrows=nrows)
+    fig, axs = plt.subplots(figsize=(10,nrows*3), ncols = 3, nrows=nrows)
     [axi.set_axis_off() for axi in axs.ravel()]
     fig.tight_layout()
     for i in range(nrows):
@@ -67,15 +67,20 @@ def plot_MinMaxAvg(data, column_names, figsize=(12,4)):
     min_values = data.min(axis=0)
     max_values = data.max(axis=0)
     plt.figure()
-    plt.errorbar(np.arange(average.shape[0]), average, st_deviation, fmt='ok', lw=10, ecolor='dodgerblue')
-    plt.errorbar(np.arange(average.shape[0]), average, [min_values,max_values], fmt='.k', ecolor='grey', lw=1)
+    plt.errorbar(np.arange(average.shape[0]), average, st_deviation, fmt='ok',
+                 lw=10, ecolor='dodgerblue')
+    plt.errorbar(np.arange(average.shape[0]), average, st_deviation*3, fmt='ok',
+                 lw=3, ecolor='dodgerblue')
+    plt.errorbar(np.arange(average.shape[0]), average, [min_values,max_values],
+                 fmt='.k', ecolor='grey', lw=1)
     plt.xticks(ticks=range(len(column_names)), labels=column_names)
     plt.xlabel("Bounds names")
     plt.ylabel("Value")
+    plt.title('Pixsel values distribution in bounds: min, max, std')
     
 def plot_values_histogram(bounds, column_names, ncols=3, nrows=2):
+    """Plot bounds values histogram"""
     nrows=math.ceil(len(column_names)*1.0/ncols)
-    print("dim",nrows,ncols)
     fig, axs = plt.subplots(figsize=(3*ncols, 3*nrows),
                             ncols=ncols, nrows=nrows)
     fig.tight_layout(pad=3.0)
