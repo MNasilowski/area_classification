@@ -56,9 +56,11 @@ def show_target_pred_dif(yt,yp):
     for i in range(nrows):
         axs[i,0].imshow(yt[...,i]*255,cmap='gray', vmin=0, vmax=255)
         axs[i,1].imshow(yp[...,i]*255,cmap='gray', vmin=0, vmax=255)
-        axs[i,2].imshow((yt[...,i]-yp[...,i]+1)*127,cmap='seismic', vmin=0, vmax=255)
+        dif = axs[i,2].imshow((yt[...,i]-yp[...,i]+1)*127,cmap='seismic', vmin=0, vmax=255)
+        fig.colorbar(dif, ax=axs[i, 2])
     for ax, col in zip(axs[0], column):
         ax.set_title(col)
+       
         
 def plot_MinMaxAvg(data, column_names, figsize=(12,4)):
     """Plot mean values of data columns with min and max values"""
