@@ -32,6 +32,20 @@ def IoU(target, predicted):
     iou = iou / (np.sum(np.logical_or(target,predicted)) + 1e-10)
     return iou
 
+def acc(cm):
+    """Return accuracy for class in confusion matrix"""
+    accuracy = []
+    for i in range(cm.shape[0]):
+        accuracy.append((np.sum(cm) - np.sum(cm[i,:]) - np.sum(cm[:,i]) + 2*cm[i,i])/np.sum(cm))
+    return accuracy
+
+def prec(cm):
+    """Return precisionfor class in confusion matrix"""
+    precision = []
+    for i in range(cm.shape[0]):
+        precision.append(cm[i,i]/(np.sum(cm[:,i])))
+    return precision
+
 def metrics_matrix(Y_target, Y_pred, metric=IoU):
     """Compare target classes with predicted classes. 
     Return matrix with metrics
@@ -54,10 +68,9 @@ def show_target_pred_dif(yt,yp):
     [axi.set_axis_off() for axi in axs.ravel()]
     fig.tight_layout()
     for i in range(nrows):
-        axs[i,0].imshow(yt[...,i]*255,cmap='gray', vmin=0, vmax=255)
-        axs[i,1].imshow(yp[...,i]*255,cmap='gray', vmin=0, vmax=255)
-        dif = axs[i,2].imshow((yt[...,i]-yp[...,i]+1)*127,cmap='seismic', vmin=0, vmax=255)
-        fig.colorbar(dif, ax=axs[i, 2])
+        axs[i,0].imshow(yt[...,i]*255,cmap='Reds', vmin=0, vmax=255)
+        axs[i,1].imshow(yp[...,i]*255,cmap='Blues', vmin=0, vmax=255)
+        axs[i,2].imshow((yt[...,i]-yp[...,i]+1)*127,cmap='seismic', vmin=0, vmax=255)
     for ax, col in zip(axs[0], column):
         ax.set_title(col)
        
@@ -99,4 +112,20 @@ def show_classes_distribution(data, classes):
     ax = fig.add_axes([0,0,1,1])
     ax.bar(classes,values)
     plt.show()
+    
+def plot_keras_history(history):
+    fig, (ax1, ax2) = plt.subplots(figsize=(10,4), ncols=2, nrows=1)
+    ax1.plot(history.history['accuracy'])
+    ax1.plot(history.history['val_accuracy'])
+    ax1.set_title('model accuracy')
+    ax1.set(xlabel='epoch', ylabel='accuracy')
+    ax1.legend(['train', 'test'], loc='upper left')
+
+    ax2.plot(history.history['loss'])
+    ax2.plot(history.history['val_loss'])
+    ax2.set_title('model loss')
+    ax2.set(xlabel='epoch', ylabel='accuracy')
+    ax2.legend(['train', 'test'], loc='upper left')
+
+    pass
     
