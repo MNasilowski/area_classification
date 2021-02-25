@@ -21,8 +21,6 @@ def remove_outstandings(data):
     for i in range(data.shape[1]):
         max_value = np.mean(data[:, i]) + 3*np.std(data[:, i])
         data[:, i] = (np.where(data[:, i] < max_value, data[:, i], max_value))
-    sc = MinMaxScaler(feature_range=(0, 1))
-    data = sc.fit_transform(data)
     return data
 
 def get_classes(class_dir, dx, dy, x=0, y=0):

@@ -1,3 +1,13 @@
-1. Poprawić preprocessing by wczytywał dane z pliku konfiguracyjnego
-2. Dodać ścieżki do danych do pliku konfiguracyjnego
-3. 
+Poprawić raport
+- dodać zapisywanie modeli
+- refaktoring jeden model jedna funkcja? Klasa?
+- dodać na koniec sklasyfikowane dane
+- wyciszyć trenowanie sieci
+Uporządkować helper
+- podzielić na sekcje
+-- wykresy
+-- metryki
+-- ???
+- dodać testy do funkcji z helpera
+Pozostawić jeden notebook. Reszta do skryptów pythona
+Stworzyć przykładowe dane i dodać je do git
