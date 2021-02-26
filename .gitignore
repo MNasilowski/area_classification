@@ -4,4 +4,5 @@ Classification.png
 data_set.csv
 data.csv
 .ipynb_checkpoints
+.idea
 __pycache__
